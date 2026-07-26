@@ -1,0 +1,48 @@
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Mop Shop",
+    LoadingTitle = "Mop Shop",
+    LoadingSubtitle = "Buy Menu",
+    ConfigurationSaving = {
+        Enabled = false
+    }
+})
+
+local Tab = Window:CreateTab("🛒 Comprar", 4483362458)
+
+local Cantidad = 1
+
+Tab:CreateInput({
+    Name = "Cantidad",
+    PlaceholderText = "Ej: 10",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local Num = tonumber(Text)
+        if Num and Num > 0 then
+            Cantidad = math.floor(Num)
+        end
+    end
+})
+
+Tab:CreateButton({
+    Name = "Comprar WormtecRegular",
+    Callback = function()
+        local args = {
+            "BUY",
+            "WormtecRegular",
+            Cantidad
+        }
+
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("MopShopEvent")
+            :FireServer(unpack(args))
+
+        Rayfield:Notify({
+            Title = "Compra realizada",
+            Content = "Se intentó comprar "..Cantidad.." WormtecRegular.",
+            Duration = 3,
+            Image = 4483362458
+        })
+    end
+})
