@@ -1,19 +1,24 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "Mop Shop",
+    Name = "Mop Shop Admin",
     LoadingTitle = "Mop Shop",
-    LoadingSubtitle = "Buy Menu",
+    LoadingSubtitle = "Admin Panel",
     ConfigurationSaving = {
         Enabled = false
     }
 })
 
-local Tab = Window:CreateTab("🛒 Comprar", 4483362458)
+
+--========================--
+--        COMPRAR
+--========================--
+
+local ShopTab = Window:CreateTab("🛒 Comprar", 4483362458)
 
 local Cantidad = 1
 
-Tab:CreateInput({
+ShopTab:CreateInput({
     Name = "Cantidad",
     PlaceholderText = "Ej: 10",
     RemoveTextAfterFocusLost = false,
@@ -25,8 +30,8 @@ Tab:CreateInput({
     end
 })
 
-Tab:CreateButton({
-    Name = "Comprar WormtecRegular",
+ShopTab:CreateButton({
+    Name = "🛒 Comprar WormtecRegular",
     Callback = function()
         local args = {
             "BUY",
@@ -37,12 +42,137 @@ Tab:CreateButton({
         game:GetService("ReplicatedStorage")
             :WaitForChild("MopShopEvent")
             :FireServer(unpack(args))
+    end
+})
+
+ShopTab:CreateButton({
+    Name = "💰 Vender Todo",
+    Callback = function()
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("SellShopEvent")
+            :FireServer("SELL_ALL")
+    end
+})
+
+
+--========================--
+--       TELEPORTS
+--========================--
+
+local TeleportTab = Window:CreateTab("📍 Teleports", 4483362458)
+
+local function Teleport(x,y,z)
+    local Character = game.Players.LocalPlayer.Character
+    if Character then
+        Character:PivotTo(CFrame.new(x,y,z))
+    end
+end
+
+TeleportTab:CreateButton({
+    Name = "💰 Sell Shop",
+    Callback = function()
+        Teleport(1153.28,51.65,-580.70)
+    end
+})
+
+TeleportTab:CreateButton({
+    Name = "🚲 Bike Shop",
+    Callback = function()
+        Teleport(250.63,51.11,-250.15)
+    end
+})
+
+TeleportTab:CreateButton({
+    Name = "🔫 Gun Shop",
+    Callback = function()
+        Teleport(-189.47,51.07,-213.76)
+    end
+})
+
+
+--========================--
+--       AUTOFARM
+--========================--
+
+local FarmTab = Window:CreateTab("🌊 AutoFarm", 4483362458)
+
+FarmTab:CreateToggle({
+    Name = "🌊 Activar AutoFarm",
+    CurrentValue = false,
+    Callback = function(Value)
 
         Rayfield:Notify({
-            Title = "Compra realizada",
-            Content = "Se intentó comprar "..Cantidad.." WormtecRegular.",
-            Duration = 3,
-            Image = 4483362458
+            Title = "AutoFarm",
+            Content = Value and "Activado" or "Desactivado",
+            Duration = 3
         })
+
     end
+})
+
+
+--========================--
+--       AIM TEST
+--========================--
+
+local AimTab = Window:CreateTab("🎯 Aim Test", 4483362458)
+
+local AimEnabled = false
+local FOV = 120
+local Smoothness = 0.15
+
+
+AimTab:CreateToggle({
+    Name = "🎯 Activar Aim Test",
+    CurrentValue = false,
+    Callback = function(Value)
+
+        AimEnabled = Value
+
+        Rayfield:Notify({
+            Title = "Aim Test",
+            Content = Value and "Activado" or "Desactivado",
+            Duration = 3
+        })
+
+    end
+})
+
+
+AimTab:CreateSlider({
+    Name = "🔵 FOV",
+    Range = {50,300},
+    Increment = 5,
+    CurrentValue = 120,
+    Callback = function(Value)
+        FOV = Value
+    end
+})
+
+
+AimTab:CreateSlider({
+    Name = "🎯 Smoothness",
+    Range = {0.05,1},
+    Increment = 0.05,
+    CurrentValue = 0.15,
+    Callback = function(Value)
+        Smoothness = Value
+    end
+})
+
+
+AimTab:CreateKeybind({
+    Name = "⌨️ Tecla Aim Test",
+    CurrentKeybind = "E",
+    HoldToInteract = false,
+    Callback = function()
+        AimEnabled = not AimEnabled
+    end
+})
+
+
+Rayfield:Notify({
+    Title = "Mop Shop Admin",
+    Content = "Menu cargado correctamente",
+    Duration = 4
 })
